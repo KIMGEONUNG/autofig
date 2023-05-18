@@ -1,0 +1,18 @@
+layout: 
+  num_row: 1
+  num_col: 4
+  margin: 0.5
+font:
+  size: 20
+  type: Arial
+images:
+  - assets/sample01.jpg
+  - assets/sample01.jpg
+  - assets/sample01.jpg
+  - assets/sample01.jpg
+output: out.pdf
+labels:
+    - (a) Ours
+    - (b) Method1
+    - (C) Method2
+    - (d) Method3
