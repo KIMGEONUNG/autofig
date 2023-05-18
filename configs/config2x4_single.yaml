@@ -1,7 +1,7 @@
 layout: 
   num_row: 2
   num_col: 4
-  margin: 1.0
+  margin: 0.1
 font:
   size: 20
   type: Arial
@@ -14,7 +14,6 @@ images:
   - assets/sample01.jpg
   - assets/sample01.jpg
   - assets/sample01.jpg
-output: out.pdf
 labels:
     - 
     - 

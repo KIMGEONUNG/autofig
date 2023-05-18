@@ -1,7 +1,7 @@
 layout: 
   num_row: 1
   num_col: 2
-  margin: 0.5
+  margin: 0.1
 font:
   size: 20
   type: Arial
@@ -11,4 +11,3 @@ images:
 labels:
     - (a) Ours
     - (b) Method1
-output: out.pdf
