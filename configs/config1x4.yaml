@@ -1,3 +1,6 @@
+all_caption: False
+dpi: 150
+format: pdf
 layout: 
   num_row: 1
   num_col: 4
@@ -15,3 +18,8 @@ labels:
     - (b) Method1
     - (C) Method2
     - (d) Method3
+ylabels:
+    - 
+    - 
+    - 
+    - 

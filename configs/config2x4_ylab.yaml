@@ -1,10 +1,10 @@
-all_caption: True
+all_caption: False
 dpi: 150
 format: pdf
 layout: 
   num_row: 2
   num_col: 4
-  margin: 0.5
+  margin: 0.1
 font:
   size: 20
   type: Arial
@@ -18,20 +18,20 @@ images:
   - assets/sample01.jpg
   - assets/sample01.jpg
 labels:
+    - 
+    - 
+    - 
+    - 
     - (a) Ours
     - (b) Method1
     - (C) Method2
     - (d) Method3
-    - (e) Method3
-    - (f) Method3
-    - (g) Method3
-    - (h) Method3
 ylabels:
+    - W/ reg. 
     - 
     - 
     - 
+    - W/O reg. 
     - 
     - 
     - 
-    - 
-    -  

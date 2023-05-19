@@ -1,3 +1,6 @@
+all_caption: False
+dpi: 150
+format: pdf
 layout: 
   num_row: 1
   num_col: 3
@@ -13,3 +16,7 @@ labels:
     - (a) Ours
     - (b) Method1
     - (C) Method2
+ylabels:
+    - 
+    - 
+    - 

@@ -13,7 +13,7 @@ def load_config(config_path):
 def parse():
     p = argparse.ArgumentParser()
     p.add_argument('--config', default='configs/config2x4_label.yaml')
-    p.add_argument('--output', default='out.pdf')
+    p.add_argument('--output', default=None)
     return p.parse_args()
 
 
@@ -51,12 +51,12 @@ def plot_w_allcaption(images, labels, config):
             labelleft=False,
             labelbottom=False,
         )
-        ax.set_xlabel(label, fontsize=20, fontname=config.font.type)
+        ax.set_xlabel(label, fontsize=config.font.size, fontname=config.font.type)
 
     plt.tight_layout(pad=config.layout.margin, rect=(0, 0, 1, 1))
 
 
-def plot_images(images, labels, config):
+def plot_images(images, labels, ylabels, config):
     coef_col = 5
     coef_row = 5.5
     figsize = (
@@ -71,7 +71,7 @@ def plot_images(images, labels, config):
                                   config.layout.num_col),
                      axes_pad=config.layout.margin)
 
-    for ax, im, label in zip(grid, images, labels):
+    for ax, im, label, ylabel in zip(grid, images, labels, ylabels):
         ax.imshow(im)
 
         # REMOVE ORDER COLOR
@@ -93,21 +93,28 @@ def plot_images(images, labels, config):
         )
 
         if label is not None:
-            ax.set_xlabel(label, fontsize=20, fontname=config.font.type)
+            ax.set_xlabel(label, fontsize=config.font.size, fontname=config.font.type)
+        if ylabel is not None:
+            ax.set_ylabel(ylabel, fontsize=config.font.size, fontname=config.font.type)
 
+def extract_name(path):
+    return path.split('/')[-1].split('.')[0]
 
 def main():
     args = parse()
     config = load_config(args.config)
     assert config.layout.num_col * config.layout.num_row == len(
-        config.images) == len(config.labels)
+        config.images) == len(config.labels) == len(config.ylabels)
     images = [Image.open(p) for p in config.images]
     labels = [a for a in config.labels]
+    ylabels = [a for a in config.ylabels]
     if config.all_caption:
         plot_w_allcaption(images, labels, config)
     else:
-        plot_images(images, labels, config)
-    plt.savefig(args.output, dpi=150, bbox_inches="tight")
+        plot_images(images, labels, ylabels, config)
+
+    path_output = f"{extract_name(args.config)}.{config.format}"  if args.output is None else args.output
+    plt.savefig(path_output, dpi=150, bbox_inches="tight")
 
 
 if __name__ == "__main__":
