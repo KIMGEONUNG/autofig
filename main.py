@@ -17,6 +17,45 @@ def parse():
     return p.parse_args()
 
 
+def plot_w_allcaption(images, labels, config):
+    coef_col = 5
+    coef_row = 5.5
+    figsize = (
+        config.layout.num_col * coef_col,
+        config.layout.num_row * coef_row,
+    )
+    fig, axs = plt.subplots(
+        config.layout.num_row,
+        config.layout.num_col,
+        figsize=figsize,
+    )
+    axs = axs.reshape(-1)
+
+    for ax, im, label in zip(axs, images, labels):
+        ax.imshow(im)
+        # REMOVE ORDER COLOR
+        color_spine = 'white'
+        ax.spines['bottom'].set_color(color_spine)
+        ax.spines['top'].set_color(color_spine)
+        ax.spines['right'].set_color(color_spine)
+        ax.spines['left'].set_color(color_spine)
+
+        # REMOVE TICKS
+        ax.tick_params(
+            axis='both',
+            which='both',
+            bottom=False,
+            top=False,
+            left=False,
+            right=False,
+            labelleft=False,
+            labelbottom=False,
+        )
+        ax.set_xlabel(label, fontsize=20, fontname=config.font.type)
+
+    plt.tight_layout(pad=config.layout.margin, rect=(0, 0, 1, 1))
+
+
 def plot_images(images, labels, config):
     coef_col = 5
     coef_row = 5.5
@@ -64,7 +103,10 @@ def main():
         config.images) == len(config.labels)
     images = [Image.open(p) for p in config.images]
     labels = [a for a in config.labels]
-    plot_images(images, labels, config)
+    if config.all_caption:
+        plot_w_allcaption(images, labels, config)
+    else:
+        plot_images(images, labels, config)
     plt.savefig(args.output, dpi=150, bbox_inches="tight")
 
 
