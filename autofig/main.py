@@ -101,6 +101,7 @@ def extract_name(path):
     return path.split('/')[-1].split('.')[0]
 
 def main():
+    print('Start autofig')
     args = parse()
     config = load_config(args.config)
     assert config.layout.num_col * config.layout.num_row == len(
