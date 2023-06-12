@@ -123,21 +123,25 @@ def extract_name(path):
 
 
 def main():
-    print('Start autofig')
+    print('Started autofig')
     args = parse()
-    config = load_config(args.config)
-    assert config.layout.num_col * config.layout.num_row == len(
-        config.images) == len(config.labels) == len(config.ylabels)
-    images = [Image.open(p) for p in config.images]
-    labels = [a for a in config.labels]
-    ylabels = [a for a in config.ylabels]
-    if config.all_caption:
-        plot_w_allcaption(images, labels, config)
+    if args.gen_config:
+        gen_configs()
     else:
-        plot_images(images, labels, ylabels, config)
+        config = load_config(args.config)
+        assert config.layout.num_col * config.layout.num_row == len(
+            config.images) == len(config.labels) == len(config.ylabels)
+        images = [Image.open(p) for p in config.images]
+        labels = [a for a in config.labels]
+        ylabels = [a for a in config.ylabels]
+        if config.all_caption:
+            plot_w_allcaption(images, labels, config)
+        else:
+            plot_images(images, labels, ylabels, config)
 
-    path_output = f"{extract_name(args.config)}.{config.format}" if args.output is None else args.output
-    plt.savefig(path_output, dpi=150, bbox_inches="tight")
+        path_output = f"{extract_name(args.config)}.{config.format}" if args.output is None else args.output
+        plt.savefig(path_output, dpi=150, bbox_inches="tight")
+    print('Finished autofig')
 
 
 if __name__ == "__main__":
