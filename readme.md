@@ -9,7 +9,7 @@ Automatic figure generator such as image grids.
 python main.py --config configs/config1x4.yaml 
 ```
 <figure>
-<img src="assets/config1x4.jpg" alt="fail" style="width:100%">
+<img src="autofig/assets/config1x4.jpg" alt="fail" style="width:100%">
 </figure>
 
 
@@ -18,7 +18,7 @@ python main.py --config configs/config1x4.yaml
 python main.py --config configs/config2x4.yaml 
 ```
 <figure>
-<img src="assets/config2x4.jpg" alt="fail" style="width:100%">
+<img src="autofig/assets/config2x4.jpg" alt="fail" style="width:100%">
 </figure>
 
 #### Multiple rows example with single row label
@@ -27,7 +27,7 @@ python main.py --config configs/config2x4_single.yaml
 ```
 
 <figure>
-<img src="assets/config2x4_single.jpg" alt="fail" style="width:100%">
+<img src="autofig/assets/config2x4_single.jpg" alt="fail" style="width:100%">
 </figure>
 
 #### Multiple rows example with single row label and ylabel
@@ -36,5 +36,5 @@ python main.py --config configs/config2x4_ylab.yaml
 ```
 
 <figure>
-<img src="assets/config2x4_ylab.jpg" alt="fail" style="width:100%">
+<img src="autofig/assets/config2x4_ylab.jpg" alt="fail" style="width:100%">
 </figure>
