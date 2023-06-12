@@ -14,7 +14,7 @@ def load_config(config_path):
     return config
 
 
-def gen_configs(arg):
+def gen_configs():
     path = join(dirname(__file__), "configs")
     for path_f in glob(join(path, "*.yaml")):
         file = basename(path_f)
