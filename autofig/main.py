@@ -142,7 +142,7 @@ def main():
                 w, h = image.size
                 ratio = args.size / h
                 w_, h_ = int(ratio * w), int(ratio * h)
-                tmp.append(image.resize(w_, h_))
+                tmp.append(image.resize((w_, h_)))
             images = tmp
 
         labels = [a for a in config.labels]
