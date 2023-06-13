@@ -27,6 +27,7 @@ def parse():
     p = argparse.ArgumentParser()
     p.add_argument('--config', default='autofig.yaml')
     p.add_argument('-g', '--gen_config', action='store_true')
+    p.add_argument('-s', '--size', type=int, default=None)
     p.add_argument('--output', default=None)
     return p.parse_args()
 
@@ -128,10 +129,22 @@ def main():
     if args.gen_config:
         gen_configs()
     else:
+        assert os.path.exists(args.config)
+
         config = load_config(args.config)
         assert config.layout.num_col * config.layout.num_row == len(
             config.images) == len(config.labels) == len(config.ylabels)
+
         images = [Image.open(p) for p in config.images]
+        if args.size:
+            tmp = []
+            for image in images:
+                w, h = image.size
+                ratio = args.size / h
+                w_, h_ = int(ratio * w), int(ratio * h)
+                tmp.append(image.resize(w_, h_))
+            images = tmp
+
         labels = [a for a in config.labels]
         ylabels = [a for a in config.ylabels]
         if config.all_caption:
