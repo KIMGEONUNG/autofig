@@ -152,7 +152,7 @@ def main():
         else:
             plot_images(images, labels, ylabels, config)
 
-        path_output = f"{extract_name(args.config)}.{config.format}" if args.output is None else args.output
+        path_output = f"{config.name}.{config.format}" if args.output is None else args.output
         plt.savefig(path_output, dpi=150, bbox_inches="tight")
     print('Finished autofig')
 
