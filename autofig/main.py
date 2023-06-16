@@ -130,10 +130,19 @@ def main():
         gen_configs()
     else:
         assert os.path.exists(args.config)
-
         config = load_config(args.config)
-        assert config.layout.num_col * config.layout.num_row == len(
-            config.images) == len(config.labels) == len(config.ylabels)
+        num_total = config.layout.num_col * config.layout.num_row
+        assert num_total == len(config.images)
+
+        # PADDING WITH LAST ONE
+        config.labels = [
+            config.labels[min(len(config.labels) - 1, i)]
+            for i in range(num_total)
+        ]
+        config.ylabels = [
+            config.ylabels[min(len(config.ylabels) - 1, i)]
+            for i in range(num_total)
+        ]
 
         images = [Image.open(p) for p in config.images]
         if args.size:
