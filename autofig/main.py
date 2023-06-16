@@ -23,6 +23,15 @@ def gen_configs():
             print(f"Copy from {path_f} to {file}")
 
 
+def gen_config():
+    path = join(dirname(__file__), "configs")
+    path_f = join(path, "autofig.yaml")
+    file = basename(path_f)
+    if not os.path.exists(file):
+        shutil.copy(path_f, file)
+        print(f"Copy from {path_f} to {file}")
+
+
 def parse():
     p = argparse.ArgumentParser()
     p.add_argument('--config', default='autofig.yaml')
@@ -127,7 +136,7 @@ def main():
     print('Started autofig')
     args = parse()
     if args.gen_config:
-        gen_configs()
+        gen_config()
     else:
         assert os.path.exists(args.config)
         config = load_config(args.config)

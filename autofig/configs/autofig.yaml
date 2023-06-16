@@ -1,0 +1,38 @@
+name: autofig
+all_caption: False
+dpi: 150
+format: pdf
+layout: 
+  num_row: 2
+  num_col: 4
+  margin: 0.1
+font:
+  size: 20
+  type: Arial
+images:
+  - sample01.jpg
+  - sample01.jpg
+  - sample01.jpg
+  - sample01.jpg
+  - sample01.jpg
+  - sample01.jpg
+  - sample01.jpg
+  - sample01.jpg
+labels:
+    - 
+    - 
+    - 
+    - 
+    - (a) Ours
+    - (b) Method1
+    - (C) Method2
+    - (d) Method3
+ylabels:
+    - W/ reg. 
+    - 
+    - 
+    - 
+    - W/O reg. 
+    - 
+    - 
+    - 
