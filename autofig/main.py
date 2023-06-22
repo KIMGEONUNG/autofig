@@ -5,8 +5,10 @@ from omegaconf import OmegaConf
 from PIL import Image
 from os.path import join, dirname, basename
 from glob import glob
+from gen_config import gen_custom_config
 import os
 import shutil
+import re
 
 
 def load_config(config_path):
@@ -14,28 +16,10 @@ def load_config(config_path):
     return config
 
 
-def gen_configs():
-    path = join(dirname(__file__), "configs")
-    for path_f in glob(join(path, "*.yaml")):
-        file = basename(path_f)
-        if not os.path.exists(file):
-            shutil.copy(path_f, file)
-            print(f"Copy from {path_f} to {file}")
-
-
-def gen_config():
-    path = join(dirname(__file__), "configs")
-    path_f = join(path, "autofig.yaml")
-    file = basename(path_f)
-    if not os.path.exists(file):
-        shutil.copy(path_f, file)
-        print(f"Copy from {path_f} to {file}")
-
-
 def parse():
     p = argparse.ArgumentParser()
     p.add_argument('--config', default='autofig.yaml')
-    p.add_argument('-g', '--gen_config', action='store_true')
+    p.add_argument('-g', '--gen_config', type=str, default=None)
     p.add_argument('-s', '--size', type=int, default=None)
     p.add_argument('--output', default=None)
     return p.parse_args()
@@ -136,7 +120,12 @@ def main():
     print('Started autofig')
     args = parse()
     if args.gen_config:
-        gen_config()
+        pattern = re.compile(r'(\d+)x(\d+)')
+        match = pattern.search(args.gen_config)
+        assert match
+        row = int(match.group(1))
+        col = int(match.group(2))
+        gen_custom_config(row, col)
     else:
         assert os.path.exists(args.config)
         config = load_config(args.config)

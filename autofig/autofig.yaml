@@ -1,0 +1,23 @@
+name: autofig
+all_caption: false
+dpi: 150
+format: pdf
+layout:
+  num_row: 1
+  num_col: 3
+  margin: 0.1
+font:
+  size: 20
+  type: Arial
+images:
+- ${Black}
+- ${Black}
+- ${Black}
+labels:
+- (a)
+- (b)
+- (c)
+ylabels:
+- (A)
+- ''
+- ''
