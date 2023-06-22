@@ -5,7 +5,6 @@ from omegaconf import OmegaConf
 from PIL import Image
 from os.path import join, dirname, basename
 from glob import glob
-from gen_config import gen_custom_config
 import os
 import shutil
 import re
