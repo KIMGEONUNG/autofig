@@ -140,6 +140,11 @@ def extract_name(path):
     return path.split('/')[-1].split('.')[0]
 
 
+MACROS = {
+    "${Black}": Image.new("RGB", (512, 512)),
+}
+
+
 def main():
     print('Started autofig')
     args = parse()
@@ -166,7 +171,9 @@ def main():
             for i in range(num_total)
         ]
 
-        images = [Image.open(p) for p in config.images]
+        images = [
+            MACROS[p] if p[0] == "$" else Image.open(p) for p in config.images
+        ]
         if args.size:
             tmp = []
             for image in images:
