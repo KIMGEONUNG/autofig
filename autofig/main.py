@@ -172,7 +172,7 @@ def main():
         ]
 
         images = [
-            MACROS[p] if p[0] == "$" else Image.open(p) for p in config.images
+            MACROS[p] if p[0] == "%" else Image.open(p) for p in config.images
         ]
         if args.size:
             tmp = []
