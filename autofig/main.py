@@ -25,7 +25,7 @@ def gen_custom_config(
 
     total = col * row
 
-    config.images = ["${Black}" for j in range(row) for i in range(col)]
+    config.images = ["%Black" for j in range(row) for i in range(col)]
     config.labels = [
         "(" + chr(ord('a') + i) + ")" if j == row - 1 else ''
         for j in range(row) for i in range(col)
@@ -141,7 +141,7 @@ def extract_name(path):
 
 
 MACROS = {
-    "${Black}": Image.new("RGB", (512, 512)),
+    "%Black": Image.new("RGB", (512, 512)),
 }
 
 
