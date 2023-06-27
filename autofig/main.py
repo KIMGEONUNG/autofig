@@ -18,6 +18,7 @@ def load_config(config_path):
 def gen_custom_config(
     row,
     col,
+    path_imgs=None,
 ):
     config = OmegaConf.load(join(dirname(__file__), 'configs/autofig.yaml'))
     config.layout.num_col = col
@@ -26,6 +27,9 @@ def gen_custom_config(
     total = col * row
 
     config.images = ["%Black" for j in range(row) for i in range(col)]
+    if path_imgs:
+        config.images = (path_imgs + config.images)[:total]
+
     config.labels = [
         "(" + chr(ord('a') + i) + ")" if j == row - 1 else ''
         for j in range(row) for i in range(col)
@@ -36,7 +40,10 @@ def gen_custom_config(
     ]
 
     config_str = OmegaConf.to_yaml(config)
-    with open('autofig.yaml', 'w') as file:
+    path = 'autofig.yaml'
+
+    assert not os.path.exists(path)
+    with open(path, 'w') as file:
         file.write(config_str)
 
 
@@ -44,6 +51,7 @@ def parse():
     p = argparse.ArgumentParser()
     p.add_argument('--config', default='autofig.yaml')
     p.add_argument('-g', '--gen_config', type=str, default=None)
+    p.add_argument('--img', type=str, nargs='+', default=None)
     p.add_argument('-s', '--size', type=int, default=None)
     p.add_argument('--output', default=None)
     return p.parse_args()
@@ -154,7 +162,7 @@ def main():
         assert match
         row = int(match.group(1))
         col = int(match.group(2))
-        gen_custom_config(row, col)
+        gen_custom_config(row, col, args.img)
     else:
         assert os.path.exists(args.config)
         config = load_config(args.config)
