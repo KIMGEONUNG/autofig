@@ -25,10 +25,11 @@ def gen_custom_config(
     config.layout.num_row = row
 
     total = col * row
-
-    config.images = ["%Black" for j in range(row) for i in range(col)]
+    
+    images = ["%Black" for j in range(row) for i in range(col)]
     if path_imgs:
-        config.images = (path_imgs + config.images)[:total]
+        images = (path_imgs + images)[:total]
+    config.images = images
 
     config.labels = [
         "(" + chr(ord('a') + i) + ")" if j == row - 1 else ''
