@@ -19,6 +19,8 @@ def gen_custom_config(
     row,
     col,
     path_imgs=None,
+    labels=None,
+    ylabels=None,
 ):
     config = OmegaConf.load(join(dirname(__file__), 'configs/autofig.yaml'))
     config.layout.num_col = col
@@ -31,14 +33,21 @@ def gen_custom_config(
         images = (path_imgs + images)[:total]
     config.images = images
 
-    config.labels = [
-        "(" + chr(ord('a') + i) + ")" if j == row - 1 else ''
-        for j in range(row) for i in range(col)
-    ]
-    config.ylabels = [
-        "(" + chr(ord('A') + j) + ")" if i == 0 else '' for j in range(row)
-        for i in range(col)
-    ]
+    if labels is None:
+        config.labels = [
+            "(" + chr(ord('a') + i) + ")" if j == row - 1 else ''
+            for j in range(row) for i in range(col)
+        ]
+    else:
+        config.labels = labels
+
+    if ylabels is None:
+        config.ylabels = [
+            "(" + chr(ord('A') + j) + ")" if i == 0 else '' for j in range(row)
+            for i in range(col)
+        ]
+    else:
+        config.ylabels = ylabels
 
     config_str = OmegaConf.to_yaml(config)
     path = 'autofig.yaml'
@@ -152,6 +161,52 @@ def extract_name(path):
     return path.split('/')[-1].split('.')[0]
 
 
+def parse2convention(paths):
+    ls = []
+    for path in paths:
+        string, _ = os.path.splitext(path)
+        info = {}
+        info['%0'] = path
+        for value in string.split('-'):
+            key_val = value.split(':')
+            if len(key_val) == 1:
+                info[key_val[0]] = ''
+            elif len(key_val) == 2:
+                info[key_val[0]] = key_val[1]
+            else:
+                raise AssertionError
+        ls.append(info)
+    return ls
+
+
+def extract_labels(names, x, y):
+    rows = sorted(list(set([i[y] for i in names])))
+    cols = sorted(list(set([i[x] for i in names])))
+    print(rows)
+    print(cols)
+    n_total = len(names)
+    n_row = len(rows)
+    n_col = len(cols)
+
+    labelx = [
+        "(" + chr(ord('a') + i) + ") " + x + " " + cols[i] if j == n_row -
+        1 else '' for j in range(n_row) for i in range(n_col)
+    ]
+
+    labely = [
+        y + " " + rows[j] if i == 0 else '' for j in range(n_row)
+        for i in range(n_col)
+    ]
+
+    return labelx, labely
+
+
+def cal_row_col(names, x, y):
+    row = len(set([i[y] for i in names]))
+    col = len(set([i[x] for i in names]))
+    return row, col
+
+
 MACROS = {
     "%Black": Image.new("RGB", (512, 512)),
 }
@@ -168,15 +223,14 @@ def main():
         col = int(match.group(2))
         gen_custom_config(row, col, args.img)
     elif args.x is not None and args.y is not None and args.img is not None:
-        # we key name define key 
-
-        raise NotImplementedError
-        # row = len(args.y)
-        # col = len(args.x)
-        # xs = list(sorted(args.x))
-        # ys = list(sorted(args.y))
-        # imgs = []
-        # gen_custom_config(row, col, imgs)
+        # To sort, we should parse the string into dictionary
+        x, y = args.x, args.y
+        data = parse2convention(args.img)
+        data_sorted = list(sorted(data, key=lambda a: (a[y], a[x])))
+        names = [item["%0"] for item in data_sorted]
+        col, row = cal_row_col(data_sorted, x, y)
+        labelx, labely = extract_labels(data_sorted, x, y)
+        gen_custom_config(row, col, names, labelx, labely)  # sould define row and col
     else:
         assert os.path.exists(args.config)
         config = load_config(args.config)
