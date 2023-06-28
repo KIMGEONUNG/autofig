@@ -21,12 +21,16 @@ def gen_custom_config(
     path_imgs=None,
     labels=None,
     ylabels=None,
+    tag=None,
 ):
     config = OmegaConf.load(join(dirname(__file__), 'configs/autofig.yaml'))
     config.layout.num_col = col
     config.layout.num_row = row
 
     total = col * row
+
+    if tag:
+        config.name = tag
 
     images = ["%Black" for j in range(row) for i in range(col)]
     if path_imgs:
@@ -50,8 +54,8 @@ def gen_custom_config(
         config.ylabels = ylabels
 
     config_str = OmegaConf.to_yaml(config)
-    path = 'autofig.yaml'
 
+    path = f'autofig.{tag}.yaml' if tag else 'autofig.yaml'
     assert not os.path.exists(path)
     with open(path, 'w') as file:
         file.write(config_str)
@@ -64,6 +68,7 @@ def parse():
     p.add_argument('--img', type=str, nargs='+', default=None)
     p.add_argument('-s', '--size', type=int, default=None)
     p.add_argument('--output', default=None)
+    p.add_argument('--tag', default=None)
 
     p.add_argument('-x', type=str, default=None)
     p.add_argument('-y', type=str, default=None)
@@ -219,7 +224,7 @@ def main():
         assert match
         row = int(match.group(1))
         col = int(match.group(2))
-        gen_custom_config(row, col, args.img)
+        gen_custom_config(row, col, args.img, tag=args.tag)
     elif args.x is not None and args.y is not None and args.img is not None:
         # To sort, we should parse the string into dictionary
         x, y = args.x, args.y
@@ -228,7 +233,7 @@ def main():
         names = [item["%0"] for item in data_sorted]
         row, col = cal_row_col(data_sorted, x, y)
         labelx, labely = extract_labels(data_sorted, x, y)
-        gen_custom_config(row, col, names, labelx, labely)  # sould define row and col
+        gen_custom_config(row, col, names, labelx, labely,tag=args.tag)  # sould define row and col
     else:
         assert os.path.exists(args.config)
         config = load_config(args.config)
