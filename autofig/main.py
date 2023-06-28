@@ -182,8 +182,6 @@ def parse2convention(paths):
 def extract_labels(names, x, y):
     rows = sorted(list(set([i[y] for i in names])))
     cols = sorted(list(set([i[x] for i in names])))
-    print(rows)
-    print(cols)
     n_total = len(names)
     n_row = len(rows)
     n_col = len(cols)
