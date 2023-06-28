@@ -228,7 +228,7 @@ def main():
         data = parse2convention(args.img)
         data_sorted = list(sorted(data, key=lambda a: (a[y], a[x])))
         names = [item["%0"] for item in data_sorted]
-        col, row = cal_row_col(data_sorted, x, y)
+        row, col = cal_row_col(data_sorted, x, y)
         labelx, labely = extract_labels(data_sorted, x, y)
         gen_custom_config(row, col, names, labelx, labely)  # sould define row and col
     else:
