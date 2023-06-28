@@ -59,6 +59,7 @@ def gen_custom_config(
     assert not os.path.exists(path)
     with open(path, 'w') as file:
         file.write(config_str)
+    return path
 
 
 def parse():
@@ -215,6 +216,42 @@ MACROS = {
 }
 
 
+def mk_figure(config, args):
+    num_total = config.layout.num_col * config.layout.num_row
+    assert num_total == len(config.images)
+
+    # PADDING WITH LAST ONE
+    config.labels = [
+        config.labels[min(len(config.labels) - 1, i)] for i in range(num_total)
+    ]
+    config.ylabels = [
+        config.ylabels[min(len(config.ylabels) - 1, i)]
+        for i in range(num_total)
+    ]
+
+    images = [
+        MACROS[p] if p[0] == "%" else Image.open(p) for p in config.images
+    ]
+    if args.size:
+        tmp = []
+        for image in images:
+            w, h = image.size
+            ratio = args.size / h
+            w_, h_ = int(ratio * w), int(ratio * h)
+            tmp.append(image.resize((w_, h_)))
+        images = tmp
+
+    labels = [a for a in config.labels]
+    ylabels = [a for a in config.ylabels]
+    if config.all_caption:
+        plot_w_allcaption(images, labels, config)
+    else:
+        plot_images(images, labels, ylabels, config)
+
+    path_output = f"{config.name}.{config.format}" if args.output is None else args.output
+    plt.savefig(path_output, dpi=150, bbox_inches="tight")
+
+
 def main():
     print('Started autofig')
     args = parse()
@@ -225,6 +262,7 @@ def main():
         row = int(match.group(1))
         col = int(match.group(2))
         gen_custom_config(row, col, args.img, tag=args.tag)
+        return
     elif args.x is not None and args.y is not None and args.img is not None:
         # To sort, we should parse the string into dictionary
         x, y = args.x, args.y
@@ -233,44 +271,14 @@ def main():
         names = [item["%0"] for item in data_sorted]
         row, col = cal_row_col(data_sorted, x, y)
         labelx, labely = extract_labels(data_sorted, x, y)
-        gen_custom_config(row, col, names, labelx, labely,tag=args.tag)  # sould define row and col
+        path = gen_custom_config(row, col, names, labelx, labely,
+                          tag=args.tag)  # sould define row and col
+        config = load_config(path)
+        mk_figure(config, args)
     else:
         assert os.path.exists(args.config)
         config = load_config(args.config)
-        num_total = config.layout.num_col * config.layout.num_row
-        assert num_total == len(config.images)
-
-        # PADDING WITH LAST ONE
-        config.labels = [
-            config.labels[min(len(config.labels) - 1, i)]
-            for i in range(num_total)
-        ]
-        config.ylabels = [
-            config.ylabels[min(len(config.ylabels) - 1, i)]
-            for i in range(num_total)
-        ]
-
-        images = [
-            MACROS[p] if p[0] == "%" else Image.open(p) for p in config.images
-        ]
-        if args.size:
-            tmp = []
-            for image in images:
-                w, h = image.size
-                ratio = args.size / h
-                w_, h_ = int(ratio * w), int(ratio * h)
-                tmp.append(image.resize((w_, h_)))
-            images = tmp
-
-        labels = [a for a in config.labels]
-        ylabels = [a for a in config.ylabels]
-        if config.all_caption:
-            plot_w_allcaption(images, labels, config)
-        else:
-            plot_images(images, labels, ylabels, config)
-
-        path_output = f"{config.name}.{config.format}" if args.output is None else args.output
-        plt.savefig(path_output, dpi=150, bbox_inches="tight")
+        mk_figure(config, args)
     print('Finished autofig')
 
 
