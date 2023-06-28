@@ -25,7 +25,7 @@ def gen_custom_config(
     config.layout.num_row = row
 
     total = col * row
-    
+
     images = ["%Black" for j in range(row) for i in range(col)]
     if path_imgs:
         images = (path_imgs + images)[:total]
@@ -55,6 +55,9 @@ def parse():
     p.add_argument('--img', type=str, nargs='+', default=None)
     p.add_argument('-s', '--size', type=int, default=None)
     p.add_argument('--output', default=None)
+
+    p.add_argument('-x', type=str, default=None)
+    p.add_argument('-y', type=str, default=None)
     return p.parse_args()
 
 
@@ -164,6 +167,16 @@ def main():
         row = int(match.group(1))
         col = int(match.group(2))
         gen_custom_config(row, col, args.img)
+    elif args.x is not None and args.y is not None and args.img is not None:
+        # we key name define key 
+
+        raise NotImplementedError
+        # row = len(args.y)
+        # col = len(args.x)
+        # xs = list(sorted(args.x))
+        # ys = list(sorted(args.y))
+        # imgs = []
+        # gen_custom_config(row, col, imgs)
     else:
         assert os.path.exists(args.config)
         config = load_config(args.config)
